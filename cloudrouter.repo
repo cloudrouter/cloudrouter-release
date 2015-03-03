@@ -1,0 +1,5 @@
+[cloudrouter]
+name=cloudrouter
+baseurl=https://cloudrouter.org/repo/beta/x86_64
+enabled=1
+gpgcheck=1
