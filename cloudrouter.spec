@@ -1,6 +1,6 @@
 Name:           cloudrouter-release
 Version:        1
-Release:        2
+Release:        3
 Summary:        Extra packages for the CloudRouter Software-Defined Interconnect (SDI) platform
 
 Group:          System Environment/Base
@@ -42,6 +42,8 @@ rm -rf $RPM_BUILD_ROOT
 /etc/pki/rpm-gpg/*
 
 %changelog
+* Tue Mar 31 2015 David Jorm - 1-3
+- Update repo URL
 * Mon Mar 02 2015 David Jorm - 1-2
 - Remove update of issue file, this is now handled by the CloudRouter image build script
 * Tue Jan 20 2015 David Jorm - 1-1
