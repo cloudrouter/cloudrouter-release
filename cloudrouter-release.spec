@@ -4,7 +4,7 @@
 Summary:	CloudRouter release files
 Name:		cloudrouter-release
 Version:	1
-Release:	4
+Release:	5
 License:	AGPLv3
 Group:		System Environment/Base
 Source:		%{name}-%{version}.tar.gz
@@ -86,6 +86,9 @@ install -d -m 755 $RPM_BUILD_ROOT/etc/yum.repos.d
 for file in cloudrouter*repo ; do
   install -m 644 $file $RPM_BUILD_ROOT/etc/yum.repos.d
 done
+for file in fedora*repo ; do
+  install -m 644 $file $RPM_BUILD_ROOT/etc/yum.repos.d
+done
 
 # Set up the dist tag macros
 install -d -m 755 $RPM_BUILD_ROOT%{_rpmconfigdir}/macros.d
@@ -110,6 +113,10 @@ rm -rf $RPM_BUILD_ROOT
 %config %attr(0644,root,root) /etc/system-release-cpe
 %dir /etc/yum.repos.d
 %config(noreplace) /etc/yum.repos.d/cloudrouter.repo
+%config(noreplace) /etc/yum.repos.d/fedora.repo
+%config(noreplace) /etc/yum.repos.d/fedora-updates.repo
+%config(noreplace) /etc/yum.repos.d/fedora-updates-testing.repo
+%config(noreplace) /etc/yum.repos.d/fedora-rawhide.repo
 %config(noreplace) %attr(0644,root,root) /etc/issue
 %config(noreplace) %attr(0644,root,root) /etc/issue.net
 %attr(0644,root,root) %{_rpmconfigdir}/macros.d/macros.dist
@@ -121,6 +128,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc README.CloudRouter-Release-Notes
 
 %changelog
+* Sat Apr 04 2015 Paul Gampe <pgampe@iix.net> - 1-5
+- include fedora repos
+
 * Sat Apr 04 2015 Paul Gampe <pgampe@iix.net> - 1-4
 - follow generic-release format
 
