@@ -17,7 +17,9 @@ $(SRC_FILE):
 #
 # .PHONY: clean
 
-rpm: $(SRC_FILE)
+source: $(SRC_FILE)
+
+rpm: source
 	rpmbuild --define "_topdir %(pwd)/rpm-build" \
 	    --define "_builddir %{_topdir}" \
 	    --define "_rpmdir %{_topdir}" \
