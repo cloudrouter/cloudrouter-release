@@ -4,7 +4,7 @@
 Summary:	CloudRouter release files
 Name:		cloudrouter-release
 Version:	1
-Release:	5
+Release:	6
 License:	AGPLv3
 Group:		System Environment/Base
 Source:		%{name}-%{version}.tar.gz
@@ -128,6 +128,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc README.CloudRouter-Release-Notes
 
 %changelog
+* Mon Apr 13 2015 David Jorm <djorm@iix.net> - 1-6
+- increment release to facilitate rebuild
+
 * Sat Apr 04 2015 Paul Gampe <pgampe@iix.net> - 1-5
 - include fedora repos
 
