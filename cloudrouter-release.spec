@@ -69,7 +69,11 @@ EOF
 # Install the keys
 install -d -m 755 $RPM_BUILD_ROOT/etc/pki/rpm-gpg
 
-install -m 644 RPM-GPG-KEY* $RPM_BUILD_ROOT/etc/pki/rpm-gpg/
+%if %{distribution} == "Fedora"
+install -m 644 RPM-GPG-KEY-fedora* $RPM_BUILD_ROOT/etc/pki/rpm-gpg/
+%else
+install -m 644 RPM-GPG-KEY-CentOS* $RPM_BUILD_ROOT/etc/pki/rpm-gpg/
+%endif
 
 # Link the primary/secondary keys to arch files, according to archmap.
 # Ex: if there's a key named RPM-GPG-KEY-fedora-19-primary, and archmap
@@ -86,7 +90,7 @@ for keyfile in RPM-GPG-KEY*; do
  ln -s $keyfile ${keyfile%%-*}-$arch # NOTE: RPM replaces %% with %
  done
 done
-%end
+%endif
 # and add symlink for compat generic location
 ln -s RPM-GPG-KEY-cloudrouter-%{dist_version}-primary RPM-GPG-KEY-%{dist_version}-cloudrouter
 popd
@@ -98,8 +102,8 @@ done
 %if %{distribution} == "Fedora"
 for file in fedora*repo ; do
 %else
-for file in centos*repo ; do
-%end
+for file in CentOS*repo ; do
+%endif
   install -m 644 $file $RPM_BUILD_ROOT/etc/yum.repos.d
 done
 
@@ -126,14 +130,15 @@ rm -rf $RPM_BUILD_ROOT
 %config %attr(0644,root,root) /etc/system-release-cpe
 %dir /etc/yum.repos.d
 %config(noreplace) /etc/yum.repos.d/cloudrouter.repo
-%if ${distribution} == "Fedora"
+%if %{distribution} == "Fedora"
 %config(noreplace) /etc/yum.repos.d/fedora.repo
 %config(noreplace) /etc/yum.repos.d/fedora-updates.repo
 %config(noreplace) /etc/yum.repos.d/fedora-updates-testing.repo
 %config(noreplace) /etc/yum.repos.d/fedora-rawhide.repo
 %else
 %config(noreplace) /etc/yum.repos.d/CentOS-Base.repo
-%end
+%config(noreplace) /etc/yum.repos.d/CentOS-Sources.repo
+%endif
 %config(noreplace) %attr(0644,root,root) /etc/issue
 %config(noreplace) %attr(0644,root,root) /etc/issue.net
 %attr(0644,root,root) %{_rpmconfigdir}/macros.d/macros.dist
