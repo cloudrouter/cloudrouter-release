@@ -1,10 +1,11 @@
 %define release_name CloudRouter
 %define dist_version 1
+%define distribution CentOS
 
 Summary:	CloudRouter release files
 Name:		cloudrouter-release
 Version:	1
-Release:	6
+Release:	7
 License:	AGPLv3
 Group:		System Environment/Base
 Source:		%{name}-%{version}.tar.gz
@@ -13,7 +14,11 @@ Provides:	redhat-release
 Provides:	system-release
 Provides:	system-release(release)
 BuildArch:	noarch
+%if %{distribution} == "Fedora"
 Conflicts:	fedora-release
+%else
+Conflicts:	centos-release
+%endif
 
 %description
 CloudRouter release files such as yum configs and various /etc/ files that
@@ -24,7 +29,9 @@ Summary:	Release Notes
 License:	Open Publication
 Group:		System Environment/Base
 Provides:	system-release-notes = %{version}-%{release}
+%if %{distribution} == "Fedora"
 Conflicts:	fedora-release-notes
+%endif
 
 %description notes
 CloudRouter release notes package. 
@@ -62,13 +69,18 @@ EOF
 # Install the keys
 install -d -m 755 $RPM_BUILD_ROOT/etc/pki/rpm-gpg
 
-install -m 644 RPM-GPG-KEY* $RPM_BUILD_ROOT/etc/pki/rpm-gpg/
+%if %{distribution} == "Fedora"
+install -m 644 RPM-GPG-KEY-fedora* $RPM_BUILD_ROOT/etc/pki/rpm-gpg/
+%else
+install -m 644 RPM-GPG-KEY-CentOS* $RPM_BUILD_ROOT/etc/pki/rpm-gpg/
+%endif
 
 # Link the primary/secondary keys to arch files, according to archmap.
 # Ex: if there's a key named RPM-GPG-KEY-fedora-19-primary, and archmap
 # says "fedora-19-primary: i386 x86_64",
 # RPM-GPG-KEY-fedora-19-{i386,x86_64} will be symlinked to that key.
 pushd $RPM_BUILD_ROOT/etc/pki/rpm-gpg/
+%if %{distribution} == "Fedora"
 for keyfile in RPM-GPG-KEY*; do
  key=${keyfile#RPM-GPG-KEY-} # e.g. 'fedora-20-primary'
  arches=$(sed -ne "s/^${key}://p" $RPM_BUILD_DIR/%{name}-%{version}/archmap) \
@@ -78,6 +90,7 @@ for keyfile in RPM-GPG-KEY*; do
  ln -s $keyfile ${keyfile%%-*}-$arch # NOTE: RPM replaces %% with %
  done
 done
+%endif
 # and add symlink for compat generic location
 ln -s RPM-GPG-KEY-cloudrouter-%{dist_version}-primary RPM-GPG-KEY-%{dist_version}-cloudrouter
 popd
@@ -86,7 +99,11 @@ install -d -m 755 $RPM_BUILD_ROOT/etc/yum.repos.d
 for file in cloudrouter*repo ; do
   install -m 644 $file $RPM_BUILD_ROOT/etc/yum.repos.d
 done
+%if %{distribution} == "Fedora"
 for file in fedora*repo ; do
+%else
+for file in CentOS*repo ; do
+%endif
   install -m 644 $file $RPM_BUILD_ROOT/etc/yum.repos.d
 done
 
@@ -113,10 +130,15 @@ rm -rf $RPM_BUILD_ROOT
 %config %attr(0644,root,root) /etc/system-release-cpe
 %dir /etc/yum.repos.d
 %config(noreplace) /etc/yum.repos.d/cloudrouter.repo
+%if %{distribution} == "Fedora"
 %config(noreplace) /etc/yum.repos.d/fedora.repo
 %config(noreplace) /etc/yum.repos.d/fedora-updates.repo
 %config(noreplace) /etc/yum.repos.d/fedora-updates-testing.repo
 %config(noreplace) /etc/yum.repos.d/fedora-rawhide.repo
+%else
+%config(noreplace) /etc/yum.repos.d/CentOS-Base.repo
+%config(noreplace) /etc/yum.repos.d/CentOS-Sources.repo
+%endif
 %config(noreplace) %attr(0644,root,root) /etc/issue
 %config(noreplace) %attr(0644,root,root) /etc/issue.net
 %attr(0644,root,root) %{_rpmconfigdir}/macros.d/macros.dist
@@ -128,6 +150,9 @@ rm -rf $RPM_BUILD_ROOT
 %doc README.CloudRouter-Release-Notes
 
 %changelog
+* Thu May 07 2015 Jay Turner <jturner@iix.net> - 1.7
+- add conditionals for CentOS
+
 * Mon Apr 13 2015 David Jorm <djorm@iix.net> - 1-6
 - increment release to facilitate rebuild
 
