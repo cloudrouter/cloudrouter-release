@@ -5,7 +5,7 @@
 Summary:	CloudRouter release files
 Name:		cloudrouter-release
 Version:	1
-Release:	7
+Release:	8
 License:	AGPLv3
 Group:		System Environment/Base
 Source:		%{name}-%{version}.tar.gz
@@ -63,11 +63,12 @@ PRETTY_NAME="CloudRouter %{version} (%{release_name})"
 ANSI_COLOR="0;34"
 CPE_NAME="cpe:/o:cloudrouter:cloudrouter:%{version}"
 HOME_URL="http://cloudrouter.org/"
-BUG_REPORT_URL="http://cloudtouer.org/"
+BUG_REPORT_URL="http://cloudrouter.org/"
 EOF
 
 # Install the keys
 install -d -m 755 $RPM_BUILD_ROOT/etc/pki/rpm-gpg
+install -m 644 RPM-GPG-KEY-cloudrouter* $RPM_BUILD_ROOT/etc/pki/rpm-gpg/
 
 %if %{distribution} == "Fedora"
 install -m 644 RPM-GPG-KEY-fedora* $RPM_BUILD_ROOT/etc/pki/rpm-gpg/
@@ -150,6 +151,10 @@ rm -rf $RPM_BUILD_ROOT
 %doc README.CloudRouter-Release-Notes
 
 %changelog
+* Mon May 11 2015 Jay Turner <jturner@iix.net> - 1.8
+- fix typo in BUG_REPORT_URL
+- actually lay down CloudRouter RPM GPG key
+
 * Thu May 07 2015 Jay Turner <jturner@iix.net> - 1.7
 - add conditionals for CentOS
 
