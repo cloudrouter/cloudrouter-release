@@ -7,25 +7,30 @@ VERSION     	:= 1
 SRC_FILE_FEDORA := $(RPM_NAME_FEDORA)-$(VERSION).tar.gz
 SRC_FILE_CENTOS := $(RPM_NAME_CENTOS)-$(VERSION).tar.gz
 
+# mksrc RPM_NAME SRC_FILE dist
+mksrc = rm -rf $(1)-$(VERSION); \
+	mkdir -p $(1)-$(VERSION); \
+	find $(PKG_NAME) -maxdepth 1 -type f -exec cp {} $(1)-$(VERSION)/. \;; \
+	find $(PKG_NAME)/$(3) -maxdepth 1 -type f -exec cp {} $(1)-$(VERSION)/. \;; \
+	tar cvf $(2) $(1)-$(VERSION)
+
+rpmbuild = rpmbuild --define "_topdir %(pwd)/rpm-build" \
+	    --define "_builddir %{_topdir}" \
+	    --define "_rpmdir %{_topdir}" \
+	    --define "_srcrpmdir %{_topdir}" \
+	    --define '_rpmfilename %%{NAME}-%%{VERSION}-%%{RELEASE}.%%{ARCH}.rpm' \
+	    --define "_specdir %{_topdir}" \
+	    --define "_sourcedir  %{_topdir}" \
+	    --define "distribution  $(1)" \
+	    -ba cloudrouter-release.spec
+
 all: rpm
 
 $(SRC_FILE_FEDORA):
-	rm -rf $(RPM_NAME_FEDORA)-$(VERSION)
-	mkdir -p $(RPM_NAME_FEDORA)-$(VERSION)
-	find $(PKG_NAME) -maxdepth 1 -type f -exec cp {} $(RPM_NAME_FEDORA)-$(VERSION)/. \;
-	find $(PKG_NAME)/fedora -maxdepth 1 -type f -exec cp {} $(RPM_NAME_FEDORA)-$(VERSION)/. \;
-	tar cvf $(SRC_FILE_FEDORA) $(RPM_NAME_FEDORA)-$(VERSION)
-	mkdir -p rpm-build
-	cp $(SRC_FILE_FEDORA) rpm-build
+	$(call mksrc,$(RPM_NAME_FEDORA),$(SRC_FILE_FEDORA),fedora)
 
 $(SRC_FILE_CENTOS):
-	rm -rf $(RPM_NAME_CENTOS)
-	mkdir -p $(RPM_NAME_CENTOS)-$(VERSION)
-	find $(PKG_NAME) -maxdepth 1 -type f -exec cp {} $(RPM_NAME_CENTOS)-$(VERSION)/. \;
-	find $(PKG_NAME)/centos -maxdepth 1 -type f -exec cp {} $(RPM_NAME_CENTOS)-$(VERSION)/. \;
-	tar cvf $(SRC_FILE_CENTOS) $(RPM_NAME_CENTOS)-$(VERSION)
-	mkdir -p rpm-build
-	cp $(SRC_FILE_CENTOS) rpm-build
+	$(call mksrc,$(RPM_NAME_CENTOS),$(SRC_FILE_CENTOS),centos)
 
 # Phony targets for cleanup and similar uses
 #
@@ -33,27 +38,16 @@ $(SRC_FILE_CENTOS):
 
 source: $(SRC_FILE_FEDORA) $(SRC_FILE_CENTOS)
 
-fedora: source
-	rpmbuild --define "_topdir %(pwd)/rpm-build" \
-	    --define "_builddir %{_topdir}" \
-	    --define "_rpmdir %{_topdir}" \
-	    --define "_srcrpmdir %{_topdir}" \
-	    --define '_rpmfilename %%{NAME}-%%{VERSION}-%%{RELEASE}.%%{ARCH}.rpm' \
-	    --define "_specdir %{_topdir}" \
-	    --define "_sourcedir  %{_topdir}" \
-	    --define "distribution  Fedora" \
-	    -ba cloudrouter-release.spec
+rpm-build: source
+	mkdir -p rpm-build
+	cp $(SRC_FILE_CENTOS) rpm-build
+	cp $(SRC_FILE_FEDORA) rpm-build
 
-centos: source
-	rpmbuild --define "_topdir %(pwd)/rpm-build" \
-	    --define "_builddir %{_topdir}" \
-	    --define "_rpmdir %{_topdir}" \
-	    --define "_srcrpmdir %{_topdir}" \
-	    --define '_rpmfilename %%{NAME}-%%{VERSION}-%%{RELEASE}.%%{ARCH}.rpm' \
-	    --define "_specdir %{_topdir}" \
-	    --define "_sourcedir  %{_topdir}" \
-	    --define "distribution  CentOS" \
-	    -ba cloudrouter-release.spec
+fedora: rpm-build
+	$(call rpmbuild,Fedora)
+
+centos: rpm-build
+	$(call rpmbuild,Fedora)
 
 rpm: fedora centos
 
