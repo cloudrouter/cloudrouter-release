@@ -1,22 +1,26 @@
 %define release_name CloudRouter
 %define dist_version 1
-%define distribution CentOS
 
 Summary:	CloudRouter release files
-Name:		cloudrouter-release
+%if %{distribution} == "Fedora"
+Name:		cloudrouter-release-fedora
+%else if %{distribution} == "CentOS"
+Name:		cloudrouter-release-centos
+%endif
 Version:	1
 Release:	8
 License:	AGPLv3
 Group:		System Environment/Base
 Source:		%{name}-%{version}.tar.gz
 Obsoletes:	redhat-release
+Obsoletes:	cloudrouter-release
 Provides:	redhat-release
 Provides:	system-release
 Provides:	system-release(release)
 BuildArch:	noarch
 %if %{distribution} == "Fedora"
 Conflicts:	fedora-release
-%else
+%else if %{distribution} == "CentOS"
 Conflicts:	centos-release
 %endif
 
@@ -31,6 +35,8 @@ Group:		System Environment/Base
 Provides:	system-release-notes = %{version}-%{release}
 %if %{distribution} == "Fedora"
 Conflicts:	fedora-release-notes
+%else if %{distribution} == "CentOS"
+Conflicts:	centos-release-notes
 %endif
 
 %description notes
