@@ -47,7 +47,7 @@ fedora: rpm-build
 	$(call rpmbuild,Fedora)
 
 centos: rpm-build
-	$(call rpmbuild,Fedora)
+	$(call rpmbuild,CentOS)
 
 rpm: fedora centos
 
