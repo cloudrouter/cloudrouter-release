@@ -127,6 +127,11 @@ EOF
 %clean
 rm -rf $RPM_BUILD_ROOT
 
+%post
+# fix yum.conf
+sed -i s-"^bugtracker_url=.*$"-"bugtracker_url=https://cloudrouter.atlassian.net/secure/Dashboard.jspa"- /etc/yum.conf
+sed -i s/"^distroverpkg=.*$"/"distroverpkg=%{name}"/ /etc/yum.conf
+
 %files
 %defattr(-,root,root,-)
 %doc GPL GNU-AGPL-3.0.txt
