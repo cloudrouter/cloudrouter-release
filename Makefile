@@ -12,6 +12,7 @@ mksrc = rm -rf $(1)-$(VERSION); \
 	mkdir -p $(1)-$(VERSION); \
 	find $(PKG_NAME) -maxdepth 1 -type f -exec cp {} $(1)-$(VERSION)/. \;; \
 	find $(PKG_NAME)/$(3) -maxdepth 1 -type f -exec cp {} $(1)-$(VERSION)/. \;; \
+	cp LICENSE README.md $(1)-$(VERSION)/.; \
 	tar cvf $(2) $(1)-$(VERSION)
 
 rpmbuild = rpmbuild --define "_topdir %(pwd)/rpm-build" \
@@ -36,17 +37,16 @@ $(SRC_FILE_CENTOS):
 #
  .PHONY: clean
 
-source: $(SRC_FILE_FEDORA) $(SRC_FILE_CENTOS)
+source: $(SRC_FILE_CENTOS) $(SRC_FILE_FEDORA)
 
-rpm-build: source
+fedora: $(SRC_FILE_FEDORA)
 	mkdir -p rpm-build
-	cp $(SRC_FILE_CENTOS) rpm-build
 	cp $(SRC_FILE_FEDORA) rpm-build
-
-fedora: rpm-build
 	$(call rpmbuild,Fedora)
 
-centos: rpm-build
+centos: $(SRC_FILE_CENTOS)
+	mkdir -p rpm-build
+	cp $(SRC_FILE_CENTOS) rpm-build
 	$(call rpmbuild,CentOS)
 
 rpm: fedora centos
