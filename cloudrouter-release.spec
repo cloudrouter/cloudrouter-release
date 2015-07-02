@@ -1,5 +1,5 @@
 %define release_name CloudRouter
-%define dist_version 1
+%define dist_version 2
 
 Summary:	CloudRouter release files
 %if %{distribution} == "Fedora"
@@ -7,8 +7,8 @@ Name:		cloudrouter-release-fedora
 %else if %{distribution} == "CentOS"
 Name:		cloudrouter-release-centos
 %endif
-Version:	1
-Release:	8
+Version:	2
+Release:	1
 License:	AGPLv3
 Group:		System Environment/Base
 Source:		%{name}-%{version}.tar.gz
@@ -162,6 +162,9 @@ sed -i s/"^distroverpkg=.*$"/"distroverpkg=%{name}"/ /etc/yum.conf
 %doc README.CloudRouter-Release-Notes
 
 %changelog
+* Thu Jul 02 2015 John Siegrist <jsiegrist@iix.net> - 2.0
+- Increment Version for Beta 2.0 Release
+
 * Mon May 11 2015 Jay Turner <jturner@iix.net> - 1.8
 - fix typo in BUG_REPORT_URL
 - actually lay down CloudRouter RPM GPG key

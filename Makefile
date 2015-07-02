@@ -3,7 +3,7 @@
 PKG_NAME		:= cloudrouter-release
 RPM_NAME_FEDORA := $(PKG_NAME)-fedora
 RPM_NAME_CENTOS := $(PKG_NAME)-centos
-VERSION     	:= 1
+VERSION     	:= 2
 SRC_FILE_FEDORA := $(RPM_NAME_FEDORA)-$(VERSION).tar.gz
 SRC_FILE_CENTOS := $(RPM_NAME_CENTOS)-$(VERSION).tar.gz
 

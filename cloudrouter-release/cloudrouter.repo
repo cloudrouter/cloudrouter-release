@@ -1,5 +1,5 @@
 [cloudrouter]
 name=cloudrouter
-baseurl=https://repo.cloudrouter.org/repo/$releasever/$basearch/
+baseurl=https://repo.cloudrouter.org/repo/fedora/$releasever/$basearch/
 enabled=1
 gpgcheck=1
