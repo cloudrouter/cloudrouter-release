@@ -121,7 +121,7 @@ cat >> $RPM_BUILD_ROOT%{_rpmconfigdir}/macros.d/macros.dist << EOF
 
 %%cloudrouter		%{dist_version}
 %%dist		.cr%{dist_version}
-%%cr%{dist_version}		1
+%%cr%{dist_version}		2
 EOF
 
 %clean
