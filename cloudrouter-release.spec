@@ -1,4 +1,4 @@
-%define release_name CloudRouter
+%define release_name CloudRouter Beta
 %define dist_version 2
 
 Summary:	CloudRouter release files
@@ -8,7 +8,7 @@ Name:		cloudrouter-release-fedora
 Name:		cloudrouter-release-centos
 %endif
 Version:	2
-Release:	1
+Release:	2
 License:	AGPLv3
 Group:		System Environment/Base
 Source:		%{name}-%{version}.tar.gz
@@ -55,8 +55,8 @@ echo "CloudRouter release %{version} (%{release_name})" > $RPM_BUILD_ROOT/etc/cl
 echo "cpe:/o:cloudrouter:cloudrouter:%{version}" > $RPM_BUILD_ROOT/etc/system-release-cpe
 cp -p $RPM_BUILD_ROOT/etc/cloudrouter-release $RPM_BUILD_ROOT/etc/issue
 echo "Kernel \r on an \m (\l)" >> $RPM_BUILD_ROOT/etc/issue
-cp -p $RPM_BUILD_ROOT/etc/issue $RPM_BUILD_ROOT/etc/issue.net
 echo >> $RPM_BUILD_ROOT/etc/issue
+cp -p $RPM_BUILD_ROOT/etc/issue $RPM_BUILD_ROOT/etc/issue.net
 ln -s cloudrouter-release $RPM_BUILD_ROOT/etc/redhat-release
 ln -s cloudrouter-release $RPM_BUILD_ROOT/etc/system-release
 
@@ -162,6 +162,9 @@ sed -i s/"^distroverpkg=.*$"/"distroverpkg=%{name}"/ /etc/yum.conf
 %doc README.CloudRouter-Release-Notes
 
 %changelog
+* Thu Jul 09 2015 John Siegrist <john@complects.com> - 2.0
+- Tagged the Release with Beta
+
 * Thu Jul 02 2015 John Siegrist <jsiegrist@iix.net> - 2.0
 - Increment Version for Beta 2.0 Release
 
